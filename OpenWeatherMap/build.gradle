@@ -37,4 +37,5 @@ dependencies {
     implementation "com.android.support:recyclerview-v7:$support_version"
     implementation "org.jetbrains.anko:anko-common:$anko_version"
     implementation "com.google.code.gson:gson:2.4"
+    implementation "com.squareup.picasso:picasso:2.5.2"
 }

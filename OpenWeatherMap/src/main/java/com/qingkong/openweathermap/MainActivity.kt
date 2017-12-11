@@ -5,13 +5,21 @@ import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
 import com.qingkong.openweathermap.Utils.ForecastRequest
-import com.qingkong.openweathermap.domain.ForecastDataMapper
+import com.qingkong.openweathermap.adapter.ForecastListAdapter
+import com.qingkong.openweathermap.domain.Forecast
+import com.qingkong.openweathermap.domain.RequestForecastCommand
 import kotlinx.android.synthetic.main.activity_main.*
 import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.toast
 import org.jetbrains.anko.uiThread
 
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(),ForecastListAdapter.OnItemClickListener {
+    override fun invoke(forecast: Forecast) {
+       toast(forecast.date)
+        println(forecast.date)
+    }
+
     private val forecastlist= listOf<String>(
             "Mon 6/23 - Sunny - 31/17",
             "Tue 6/24 - Foggy - 21/8",
@@ -24,7 +32,10 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
         recycleView.layoutManager = LinearLayoutManager(this)
+
+
 
         doAsync {
             try {
@@ -32,14 +43,17 @@ class MainActivity : AppCompatActivity() {
 //                val readText = URL(ForecastRequest.COMPLETE_URL).readText()
 //                Log.e("晴空",readText)
 
-                val forecastResult = ForecastRequest("Xiamen").execute()
-                Log.e("晴空",forecastResult.toString())
+//                val forecastResult = ForecastRequest("Xiamen").execute()
+//                Log.e("晴空",forecastResult.toString())
 
-                val dataModel = ForecastDataMapper().convertFromDataModel(forecastResult)
+//                val dataModel = ForecastDataMapper().convertFromDataModel(forecastResult)
+                val dataModel = RequestForecastCommand("Xiamen").execute()
                 Log.e("晴空",dataModel.toString())
+                Log.e("晴空","size == "+dataModel.size())
 
                 uiThread {
-                    var adapter = ForecastListAdapter(dataModel.dailyForecast)
+                    var adapter = ForecastListAdapter(dataModel.dailyForecast,this@MainActivity)
+
                         recycleView.adapter = adapter
 
                 }
