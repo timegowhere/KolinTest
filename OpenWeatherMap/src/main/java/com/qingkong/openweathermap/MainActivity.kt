@@ -52,7 +52,9 @@ class MainActivity : AppCompatActivity(),ForecastListAdapter.OnItemClickListener
                 Log.e("晴空","size == "+dataModel.size())
 
                 uiThread {
-                    var adapter = ForecastListAdapter(dataModel.dailyForecast,this@MainActivity)
+                    var adapter = ForecastListAdapter(dataModel.dailyForecast,{forecast -> toast(forecast.date) },{forecast -> onItemLongClick(forecast) })
+//                    var adapter = ForecastListAdapter(dataModel.dailyForecast){forecast -> toast(forecast.date) }
+//                    var adapter = ForecastListAdapter(dataModel.dailyForecast){toast(it.date)}
 
                         recycleView.adapter = adapter
 
@@ -64,5 +66,9 @@ class MainActivity : AppCompatActivity(),ForecastListAdapter.OnItemClickListener
 
 
         }
+    }
+    fun onItemLongClick(forecast: Forecast):Boolean{
+        toast(forecast.description)
+        return true;
     }
 }
